@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -23,7 +24,12 @@ public class Main {
                 String imgPath = "akropolis_bad.png"; //TODO
 
                 //read image from disk
-                BufferedImage image = openBufferdImage(imgPath);
+                BufferedImage image = null;
+                try {
+                    image = openBufferdImage(imgPath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
                 //calculate histogram
                 int[] hist = calcHistogram(image);
@@ -62,9 +68,8 @@ public class Main {
      * @return Image as BufferedImage
      * @see BufferedImage
      */
-    private static BufferedImage openBufferdImage(String filePath) {
-        //TODO implement
-        return null;
+    private static BufferedImage openBufferdImage(String filePath) throws IOException {
+        return ImageIO.read(new File(filePath));
     }
 
     /**
@@ -74,8 +79,18 @@ public class Main {
      * @return Histogram as int array
      */
     private static int[] calcHistogram(BufferedImage image) {
-        //TODO implement
-        return new int[0];
+        int[] histogram = new int[256]; // For grayscale, 256 possible intensity values
+
+        // Loop through each pixel in the image
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                // Get the grayscale value of the pixel (0-255)
+                int color = new Color(image.getRGB(x, y)).getRed(); // assuming grayscale, red = green = blue
+                histogram[color]++;
+            }
+        }
+
+        return histogram;
     }
 
     /**
@@ -86,7 +101,20 @@ public class Main {
      * @return Lower bound
      */
     private static int calcLowerBound(int[] hist, double d) {
-        //TODO implement
+        int totalPixels = 0;
+        for (int count : hist) {
+            totalPixels += count;
+        }
+
+        int targetPixels = (int) (totalPixels * d);
+        int cumulativePixels = 0;
+        for (int i = 0; i < hist.length; i++) {
+            cumulativePixels += hist[i];
+            if (cumulativePixels >= targetPixels) {
+                return i;
+            }
+        }
+
         return 0;
     }
 
@@ -98,7 +126,20 @@ public class Main {
      * @return Upper bound
      */
     private static int calcUpperBound(int[] hist, double d) {
-        //TODO implement
+        int totalPixels = 0;
+        for (int count : hist) {
+            totalPixels += count;
+        }
+
+        int targetPixels = (int) (totalPixels * d); // Corrected line
+        int cumulativePixels = 0;
+        for (int i = hist.length - 1; i >= 0; i--) {
+            cumulativePixels += hist[i];
+            if (cumulativePixels >= targetPixels) {
+                return i;
+            }
+        }
+
         return 255;
     }
 
@@ -110,7 +151,20 @@ public class Main {
      * @param high  Upper bound
      */
     private static void stretchHistogramm(BufferedImage image, int low, int high) {
-        //TODO implement
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                int pixel = image.getRGB(x, y) & 0xFF; // Get the grayscale value
+
+                // Calculate the new pixel value using the linear transformation
+                int newPixel = (int) ((pixel - low) * 255.0 / (high - low));
+
+                // Ensure the new pixel value is within the valid range (0-255)
+                newPixel = Math.max(0, Math.min(255, newPixel));
+
+                // Set the new pixel value
+                image.setRGB(x, y, (newPixel << 16) | (newPixel << 8) | newPixel);
+            }
+        }
     }
 
     /**
@@ -120,7 +174,12 @@ public class Main {
      * @param path  Path to store image at
      */
     private static void writeImage(BufferedImage image, String path) {
-        //TODO implement
+        try {
+            File outputFile = new File(path);
+            ImageIO.write(image, "png", outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
