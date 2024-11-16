@@ -4,7 +4,6 @@
  */
 
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 
 public class Pixeldata {
     BufferedImage img;
@@ -34,13 +33,14 @@ public class Pixeldata {
     }
 
     public void print(int x, int y) {
-        this.extractRGB(x,y);
-        System.out.println("Pixel at (" + x + "," + y + ") = " + R + "/" + G + "/" + B + " (alpha=" + A + ")");
-    }
+        this.extractRGB(x, y);
+        this.RGB2HSV(); // Convert the extracted RGB to HSV
+        System.out.println("Pixel at (" + x + "," + y + ") = " + R + "/" + G + "/" + B + " (alpha=" + A + ")" +
+                " H:" + H + " S:" + S + " V:" + V);    }
 
     public void count(int val, boolean gt) {
         // TODO: Exercise 4.1 - explain the code in this method
-        int c1=0, c2=0, c3=0;
+        int c1 = 0, c2 = 0, c3 = 0;
 
         for (int y = 0; y < img.getHeight(); y++)
             for (int x = 0; x < img.getWidth(); x++) {
@@ -93,7 +93,43 @@ public class Pixeldata {
     }
 
     private void RGB2HSV() {
-        //TODO: Exercise 4.3: convert RGB to HSV (save result in H, S, V members).
+        // Convert RGB from 0-255 range to 0-1 range
+        float r = R / 255.0f;
+        float g = G / 255.0f;
+        float b = B / 255.0f;
+
+        // Find the maximum and minimum values among R, G, B
+        float max = Math.max(r, Math.max(g, b));
+        float min = Math.min(r, Math.min(g, b));
+        float delta = max - min;
+
+        // Compute V (Value)
+        V = max; // V ranges from 0 to 1
+
+        // Compute S (Saturation)
+        if (max == 0) {
+            S = 0; // Avoid division by zero; if max is 0, saturation is 0
+        } else {
+            S = delta / max; // S ranges from 0 to 1
+        }
+
+        // Compute H (Hue)
+        if (delta == 0) {
+            H = 0; // Hue is undefined when delta is 0; set to 0 for practical purposes
+        } else {
+            if (max == r) {
+                H = 60 * (((g - b) / delta) % 6);
+            } else if (max == g) {
+                H = 60 * (((b - r) / delta) + 2);
+            } else { // max == b
+                H = 60 * (((r - g) / delta) + 4);
+            }
+
+            // Ensure H is positive
+            if (H < 0) {
+                H += 360;
+            }
+        }
     }
 
     private int clip(float val) {
@@ -102,7 +138,7 @@ public class Pixeldata {
         else if (val > 255)
             return 255;
         else
-            return (int)val;
+            return (int) val;
     }
 
     private void setFloatsRGB(float r, float g, float b) {
@@ -122,7 +158,7 @@ public class Pixeldata {
 
         // TODO: Exercise 4.5 - implement Saturation filter
 
-        return  imgN;
+        return imgN;
     }
 
     public BufferedImage makeSepia(float HtoUse) {
@@ -130,9 +166,8 @@ public class Pixeldata {
 
         // TODO: Exercise 4.6 - implement Sepia filter
 
-        return  imgN;
+        return imgN;
     }
-
 
 
 }
