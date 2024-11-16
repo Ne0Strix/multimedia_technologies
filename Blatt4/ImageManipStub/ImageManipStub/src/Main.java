@@ -61,19 +61,19 @@ public class Main {
 //        }
 
         //-----------Exercise 2-----------
-        BufferedImage imgVintage = pixeldata.makeVintage(255, 255, 128);
-        showBufferedImage(imgVintage, "Vintage");
-        saveImageAsFile(imgVintage, "Vintage");
+//        BufferedImage imgVintage = pixeldata.makeVintage(255, 255, 128);
+//        showBufferedImage(imgVintage, "Vintage");
+//        saveImageAsFile(imgVintage, "Vintage");
 
         //-----------Exercise 5-----------
-        /*BufferedImage imgSaturized = pixeldata.makeSaturized();
-        showBufferedImage(imgSaturized, "Saturized");
-        saveImageAsFile(imgSaturized, "Saturized");*/
+//        BufferedImage imgSaturized = pixeldata.makeSaturized();
+//        showBufferedImage(imgSaturized, "Saturized");
+//        saveImageAsFile(imgSaturized, "Saturized");
 
         //-----------Exercise 6-----------
-        /*BufferedImage imgSepia = pixeldata.makeSepia(40);
-        showBufferedImage(imgSepia, "Sepia");
-        saveImageAsFile(imgSepia, "Sepia");*/
+//        BufferedImage imgSepia = pixeldata.makeSepia(0);
+//        showBufferedImage(imgSepia, "Sepia");
+//        saveImageAsFile(imgSepia, "Sepia");
     }
 
     private static void addWindowCloseHandler(JFrame f) {

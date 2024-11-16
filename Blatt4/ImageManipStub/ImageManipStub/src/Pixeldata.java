@@ -240,18 +240,58 @@ public class Pixeldata {
     public BufferedImage makeSaturized() {
         BufferedImage imgN = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
 
-        // TODO: Exercise 4.5 - implement Saturation filter
+        // Iterate over all pixels in the image
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                // Extract the RGB components of the current pixel
+                this.extractRGB(x, y);
+
+                // Convert the RGB values to HSV
+                this.RGB2HSV();
+
+                // Increase the saturation by 60%, ensuring it does not exceed 1.0
+                S = Math.min(S * 1.6f, 1.0f);
+
+                // Convert the HSV values back to RGB
+                this.HSV2RGB();
+
+                // Set the new pixel value in the resulting image
+                imgN.setRGB(x, y, toPixel(R, G, B));
+            }
+        }
 
         return imgN;
     }
 
-    public BufferedImage makeSepia(float HtoUse) {
+    public BufferedImage makeSepia(float fixedHue) {
         BufferedImage imgN = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
 
-        // TODO: Exercise 4.6 - implement Sepia filter
+        // Iterate over all pixels in the image
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                // Extract the RGB components of the current pixel
+                this.extractRGB(x, y);
+
+                // Convert the RGB values to HSV
+                this.RGB2HSV();
+
+                // Fix the hue to the specified fixedHue value
+                H = fixedHue;
+
+                // Ensure hue is within [0, 360)
+                H = H % 360;
+                if (H < 0) {
+                    H += 360;
+                }
+
+                // Convert the HSV values back to RGB
+                this.HSV2RGB();
+
+                // Set the new pixel value in the resulting image
+                imgN.setRGB(x, y, toPixel(R, G, B));
+            }
+        }
 
         return imgN;
     }
-
-
 }
