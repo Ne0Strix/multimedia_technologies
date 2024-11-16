@@ -33,10 +33,33 @@ public class Pixeldata {
     }
 
     public void print(int x, int y) {
+        // Extract original RGB values
         this.extractRGB(x, y);
-        this.RGB2HSV(); // Convert the extracted RGB to HSV
-        System.out.println("Pixel at (" + x + "," + y + ") = " + R + "/" + G + "/" + B + " (alpha=" + A + ")" +
-                " H:" + H + " S:" + S + " V:" + V);    }
+        int originalR = R;
+        int originalG = G;
+        int originalB = B;
+
+        // Convert to HSV
+        this.RGB2HSV();
+
+        // Store the HSV values
+        float h = H;
+        float s = S;
+        float v = V;
+
+        // Convert back to RGB
+        this.HSV2RGB();
+        int convertedR = R;
+        int convertedG = G;
+        int convertedB = B;
+
+        // Print out the values
+        System.out.println("Pixel at (" + x + "," + y + "):");
+        System.out.println("Original RGB: " + originalR + "/" + originalG + "/" + originalB);
+        System.out.println("Converted HSV: H:" + h + " S:" + s + " V:" + v);
+        System.out.println("Converted Back RGB: " + convertedR + "/" + convertedG + "/" + convertedB);
+        System.out.println();
+    }
 
     public void count(int val, boolean gt) {
         // TODO: Exercise 4.1 - explain the code in this method
@@ -148,8 +171,69 @@ public class Pixeldata {
     }
 
     private void HSV2RGB() {
-        //TODO: Exercise 4.4: convert HSV to RGB (save result in R, G, B members).
-        //Note: you might want to use the clip() helper function above
+        float h = H;
+        float s = S;
+        float v = V;
+
+        // Ensure hue is within [0, 360)
+        h = h % 360;
+        if (h < 0) {
+            h += 360;
+        }
+
+        // If saturation is zero, the color is a shade of gray
+        if (s == 0) {
+            // R, G, and B are all equal to V (converted to [0,255])
+            int value = clip(v * 255);
+            R = value;
+            G = value;
+            B = value;
+        } else {
+            float c = v * s; // Chroma
+            float x = c * (1 - Math.abs((h / 60) % 2 - 1));
+            float m = v - c;
+
+            float rPrime, gPrime, bPrime;
+
+            if (h < 60) {
+                rPrime = c;
+                gPrime = x;
+                bPrime = 0;
+            } else if (h < 120) {
+                rPrime = x;
+                gPrime = c;
+                bPrime = 0;
+            } else if (h < 180) {
+                rPrime = 0;
+                gPrime = c;
+                bPrime = x;
+            } else if (h < 240) {
+                rPrime = 0;
+                gPrime = x;
+                bPrime = c;
+            } else if (h < 300) {
+                rPrime = x;
+                gPrime = 0;
+                bPrime = c;
+            } else {
+                rPrime = c;
+                gPrime = 0;
+                bPrime = x;
+            }
+
+            // Add m to match the lightness
+            float r = (rPrime + m) * 255;
+            float g = (gPrime + m) * 255;
+            float b = (bPrime + m) * 255;
+
+            // Set the intermediate float RGB values if needed
+            setFloatsRGB(r, g, b);
+
+            // Clip the values to [0,255] and convert to integers
+            R = clip(r);
+            G = clip(g);
+            B = clip(b);
+        }
     }
 
 
