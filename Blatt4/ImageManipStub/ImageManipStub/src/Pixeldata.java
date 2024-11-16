@@ -74,9 +74,21 @@ public class Pixeldata {
     public BufferedImage makeVintage(int maxR, int maxG, int maxB) {
         BufferedImage imgN = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
 
-        // TODO: Exercise 4.2: implement a Vintage filter by limiting the RGB values to the specified maxima
-        // return a new BufferedImage, similar to method getBP()
+        // Iterate over all pixels in the image
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                // Extract the RGB components of the current pixel
+                this.extractRGB(x, y);
 
+                // Apply the vintage filter by limiting the RGB values
+                int r = Math.min(R, maxR);
+                int g = Math.min(G, maxG);
+                int b = Math.min(B, maxB);
+
+                // Set the new pixel value in the resulting image
+                imgN.setRGB(x, y, toPixel(r, g, b));
+            }
+        }
         return imgN;
     }
 

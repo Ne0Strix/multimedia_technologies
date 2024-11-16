@@ -55,15 +55,15 @@ public class Main {
         pixeldata.count(255, true);
         pixeldata.count(0, false);
         //visualize BPs:
-        /*for (int n = 7; n >= 0; n--) {
-            BufferedImage imgBP = pixeldata.getBP(n);
-            showBufferedImage(imgBP, "BP" + n);
-        }*/
+//        for (int n = 7; n >= 0; n--) {
+//            BufferedImage imgBP = pixeldata.getBP(n);
+//            showBufferedImage(imgBP, "BP" + n);
+//        }
 
         //-----------Exercise 2-----------
-        /*BufferedImage imgVintage = pixeldata.makeVintage(255, 255, 128);
+        BufferedImage imgVintage = pixeldata.makeVintage(255, 255, 128);
         showBufferedImage(imgVintage, "Vintage");
-        saveImageAsFile(imgVintage, "Vintage");*/
+        saveImageAsFile(imgVintage, "Vintage");
 
         //-----------Exercise 5-----------
         /*BufferedImage imgSaturized = pixeldata.makeSaturized();
