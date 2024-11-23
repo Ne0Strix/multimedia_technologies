@@ -46,14 +46,14 @@ public class Main {
         f.setVisible(true);
 
         //extract pixel data
-        Pixeldata pixeldata = new Pixeldata(origImage.img);
-
-        //-----------Exercise 1-----------
-        pixeldata.print(100,500);
-        pixeldata.print(1000,400);
-        pixeldata.print(1400,1000);
-        pixeldata.count(255, true);
-        pixeldata.count(0, false);
+//        Pixeldata pixeldata = new Pixeldata(origImage.img);
+//
+//        //-----------Exercise 1-----------
+//        pixeldata.print(100,500);
+//        pixeldata.print(1000,400);
+//        pixeldata.print(1400,1000);
+//        pixeldata.count(255, true);
+//        pixeldata.count(0, false);
         //visualize BPs:
 //        for (int n = 7; n >= 0; n--) {
 //            BufferedImage imgBP = pixeldata.getBP(n);
@@ -74,6 +74,43 @@ public class Main {
 //        BufferedImage imgSepia = pixeldata.makeSepia(0);
 //        showBufferedImage(imgSepia, "Sepia");
 //        saveImageAsFile(imgSepia, "Sepia");
+
+        // Assignment 5
+        // Create a Convolution instance with the loaded image
+        Convolution convolutionProcessor = new Convolution(origImage.img);
+
+        // Define a 3x3 sharpening kernel
+        int[][] sharpenKernel = {
+                {  0, -1,  0 },
+                { -1,  5, -1 },
+                {  0, -1,  0 }
+        };
+
+        int[][] blurKernel = {
+                { 1, 1, 1 },
+                { 1, 1, 1 },
+                { 1, 1, 1 }
+        };
+
+        int[][] edgeKernel = {
+                { -1, -1, -1 },
+                { -1,  8, -1 },
+                { -1, -1, -1 }
+        };
+
+        int[][] embossKernel = {
+                { -5, -2,  0 },
+                { -1,  1,  1 },
+                {  0,  2,  5 }
+        };
+
+
+        // Apply the convolution
+        BufferedImage transformedImage = convolutionProcessor.convolution(embossKernel);
+
+        // Display the result
+        showBufferedImage(transformedImage, "Transformed Image");
+        saveImageAsFile(transformedImage, "TransformedImage");
     }
 
     private static void addWindowCloseHandler(JFrame f) {

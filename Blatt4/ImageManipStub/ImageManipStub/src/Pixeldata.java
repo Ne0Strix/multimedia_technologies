@@ -20,7 +20,6 @@ public class Pixeldata {
     }
 
     private void extractRGB(int x, int y) {
-        // TODO: Exercise 4.1 - explain the code in this method
         int pixel = img.getRGB(x, y);
         A = 255; //no alpha in TYPE_3BYTE_BGR
         R = (pixel >> 16) & 0xFF;
@@ -62,7 +61,6 @@ public class Pixeldata {
     }
 
     public void count(int val, boolean gt) {
-        // TODO: Exercise 4.1 - explain the code in this method
         int c1 = 0, c2 = 0, c3 = 0;
 
         for (int y = 0; y < img.getHeight(); y++)
@@ -77,7 +75,6 @@ public class Pixeldata {
     }
 
     public BufferedImage getBP(int n) {
-        // TODO: Exercise 4.1 - explain the code in this method
 
         BufferedImage imgN = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
 

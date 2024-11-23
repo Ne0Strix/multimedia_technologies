@@ -42,30 +42,27 @@ class EightBitImage {
     private static byte[][] create8BitImage(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
-        byte[][] data = new byte[height][width]; // Note: data[y][x]
+        byte[][] data = new byte[height][width];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                // Get the RGB color at (x, y)
+
                 int rgb = image.getRGB(x, y);
 
                 // Extract red, green, blue components (8 bits each)
-                int red = (rgb >> 16) & 0xFF;   // bits 16-23
-                int green = (rgb >> 8) & 0xFF;  // bits 8-15
-                int blue = rgb & 0xFF;          // bits 0-7
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
 
                 // Quantize the colors to reduce bit depth
-                // For red and green, we keep 3 bits (values from 0 to 7)
-                // For blue, we keep 2 bits (values from 0 to 3)
-                int red3 = red >> 5;    // Keep the top 3 bits of red
-                int green3 = green >> 5; // Keep the top 3 bits of green
-                int blue2 = blue >> 6;  // Keep the top 2 bits of blue
+                int red3 = red >> 5;
+                int green3 = green >> 5;
+                int blue2 = blue >> 6;
 
                 // Combine the bits into a single byte
-                // The bits are arranged as: RRR GGG BB
-                // Red bits in bits 7-5
-                // Green bits in bits 4-2
-                // Blue bits in bits 1-0
+                // Red 7-5
+                // Green 4-2
+                // Blue 1-0
                 int byteValue = (red3 << 5) | (green3 << 2) | blue2;
 
                 data[y][x] = (byte) (byteValue & 0xFF);
