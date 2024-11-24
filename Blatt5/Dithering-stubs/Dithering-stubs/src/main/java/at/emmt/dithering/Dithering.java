@@ -95,7 +95,38 @@ class Dithering {
      * @return the dithered 8bit color image using the static palette
      */
     public static BufferedImage color_dither(BufferedImage image) {
-        //TODO IMPLEMENT FOR EXCERCISE 5.6
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                RGBPixel oldPixel = new RGBPixel(image.getRGB(x, y));
+                RGBPixel newPixel = closestColor(oldPixel, palette);
+                image.setRGB(x, y, newPixel.toRGB());
+                RGBPixel quant_error = oldPixel.sub(newPixel);
+
+                if (x + 1 < width) {
+                    RGBPixel neighbor = new RGBPixel(image.getRGB(x + 1, y));
+                    RGBPixel errorAdjusted = neighbor.add(quant_error.mul(7.0 / 16.0));
+                    image.setRGB(x + 1, y, errorAdjusted.toColor().getRGB());
+                }
+                if (y + 1 < height) {
+                    RGBPixel neighbor = new RGBPixel(image.getRGB(x, y + 1));
+                    RGBPixel errorAdjusted = neighbor.add(quant_error.mul(5.0 / 16.0));
+                    image.setRGB(x, y + 1, errorAdjusted.toColor().getRGB());
+                }
+                if (x - 1 >= 0 && y + 1 < height) {
+                    RGBPixel neighbor = new RGBPixel(image.getRGB(x - 1, y + 1));
+                    RGBPixel errorAdjusted = neighbor.add(quant_error.mul(3.0 / 16.0));
+                    image.setRGB(x - 1, y + 1, errorAdjusted.toColor().getRGB());
+                }
+                if (x + 1 < width && y + 1 < height) {
+                    RGBPixel neighbor = new RGBPixel(image.getRGB(x + 1, y + 1));
+                    RGBPixel errorAdjusted = neighbor.add(quant_error.mul(1.0 / 16.0));
+                    image.setRGB(x + 1, y + 1, errorAdjusted.toColor().getRGB());
+                }
+            }
+        }
 
         return image;
     }
@@ -119,9 +150,16 @@ class Dithering {
      * @return the closest color of the palette compared to c
      */
     public static RGBPixel closestColor(RGBPixel c, RGBPixel[] palette) {
-        //TODO IMPLEMENT FOR EXCERCISE 5.6
-
-        return null;
+        RGBPixel closest = null;
+        int minDiff = Integer.MAX_VALUE;
+        for (RGBPixel p : palette) {
+            int d = c.diff(p);
+            if (d < minDiff) {
+                minDiff = d;
+                closest = p;
+            }
+        }
+        return closest;
     }
 
     /**
@@ -174,9 +212,10 @@ class Dithering {
         }
 
         public int diff(RGBPixel o) {
-            //TODO IMPLEMENT FOR EXCERCISE 5.6
-
-            return 0;
+            int dr = this.r - o.r;
+            int dg = this.g - o.g;
+            int db = this.b - o.b;
+            return dr * dr + dg * dg + db * db;
         }
 
         @Override
