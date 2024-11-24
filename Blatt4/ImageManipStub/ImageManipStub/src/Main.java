@@ -79,34 +79,71 @@ public class Main {
         // Create a Convolution instance with the loaded image
         Convolution convolutionProcessor = new Convolution(origImage.img);
 
-        // Define a 3x3 sharpening kernel
-        int[][] sharpenKernel = {
-                {  0, -1,  0 },
-                { -1,  5, -1 },
-                {  0, -1,  0 }
-        };
-
         int[][] blurKernel = {
                 { 1, 1, 1 },
                 { 1, 1, 1 },
                 { 1, 1, 1 }
         };
 
-        int[][] edgeKernel = {
+        // exercise 5.2
+        int[][] boostFilter = {
                 { -1, -1, -1 },
-                { -1,  8, -1 },
+                { -1,  9, -1 },
                 { -1, -1, -1 }
         };
 
+        int[][] gaussianBlur = {
+                { 1, 4, 7, 4, 1},
+                { 4, 16, 26, 16, 4},
+                { 7, 26, 41, 26, 7},
+                { 4, 16, 26, 16, 4},
+                { 1, 4, 7, 4, 1}
+        };
+
+        // exercise 5.3
+
+        int[][] horizontalEdgeFilter = {
+                { 1, 1, 1 },
+                { 0, 0, 0 },
+                { -1, -1, -1 }
+        };
+
+        int[][] tiltedEdgeFilter = {
+                { -1, -1, 0 },
+                { -1, 0, 1 },
+                { 0, 1, 1 }
+        };
+
+        // exercise 5.4
         int[][] embossKernel = {
+                { -7, -5, -3,  0,  3,  5,  7 },
+                { -5, -3, -2,  0,  2,  3,  5 },
+                { -3, -2, -1,  0,  1,  2,  3 },
+                {  0,  0,  0,  1,  0,  0,  0 },
+                {  3,  2,  1,  0, -1, -2, -3 },
+                {  5,  3,  2,  0, -2, -3, -5 },
+                {  7,  5,  3,  0, -3, -5, -7 }
+        };
+
+        int[][] smallEmbossKernel = {
                 { -5, -2,  0 },
                 { -1,  1,  1 },
                 {  0,  2,  5 }
         };
 
+        int[][] gaborKernel = {
+                { -1, -2, -1,  0,  1,  2,  1 },
+                { -2, -3, -2,  0,  2,  3,  2 },
+                { -1, -2, -1,  0,  1,  2,  1 },
+                {  0,  0,  0,  0,  0,  0,  0 },
+                {  1,  2,  1,  0, -1, -2, -1 },
+                {  2,  3,  2,  0, -2, -3, -2 },
+                {  1,  2,  1,  0, -1, -2, -1 }
+        };
+
 
         // Apply the convolution
-        BufferedImage transformedImage = convolutionProcessor.convolution(embossKernel);
+        BufferedImage transformedImage = convolutionProcessor.convolution(boostFilter);
 
         // Display the result
         showBufferedImage(transformedImage, "Transformed Image");
